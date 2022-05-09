@@ -236,21 +236,9 @@ const GameInit = (function() {
 
         $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
 
-
-
-        // GameInit.updateGame(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
-
     }
 
-    const updateGame = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
-        while(!isGameOver){
-            // console.log("123");
-        }
-
-
-    }
-
-    return { initialize, updateGame };
+    return { initialize };
 })();
 
 const UI = (function() {
