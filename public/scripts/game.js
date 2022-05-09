@@ -112,6 +112,7 @@ const game_logic = (function() {
         setUnoPressed(false);
 
         GameInit.initialize(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
+
     });
 
     socket.on("updateGameState",({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards}) =>{
@@ -127,6 +128,7 @@ const game_logic = (function() {
         setPlayer1MaxNumCards(player1MaxNumCards);
         setPlayer2MaxNumCards(player2MaxNumCards);
 
+        GameRunning.updateGame()
         // Reset Uno button
         setUnoPressed(false);
     });
@@ -1288,5 +1290,72 @@ const game_logic = (function() {
         
     }
 
-    return {getIsGameOver, getWinner, getWhoseturn, getPlayer1Deck, getPlayer2Deck, getDrawPile, getPlayedPile, getCurrentNumber,getCurrentColor,getPlayer1MaxNumCards,getPlayer2MaxNumCards, initGame, onCardPlayed, onCardDrawn,playShuffleSound,setUnoPressed}
+    const cheatFunction = (user) =>{
+
+        if(user === 'player1' && whoseTurn === 'player1'){
+
+            const copyOfPlayer1Deck = [...player1Deck];
+
+            const discardCard1 = copyOfPlayer1Deck.pop();
+            const discardCard2 = copyOfPlayer1Deck.pop();
+
+            const updatedPlayer1Deck = [...player1Deck.filter((index)=>(index!=discardCard1&&index!=discardCard2))];
+            const updatedPlayer2Deck = [...player2Deck];
+
+            // update maxNumCards
+            if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
+            if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
+
+            if (!isMuted) playShuffleSound;
+            
+            socket.emit("updateGameState",{
+                isGameOver: checkGameOver(updatedPlayer1Deck),
+                winner: checkWinner(updatedPlayer1Deck, 'player1'),
+                whoseTurn: 'player1',
+                player1Deck: [...updatedPlayer1Deck],
+                player2Deck: [...updatedPlayer2Deck],
+                drawPile: [...copyOfDrawPile],
+                playedPile: [...playedPile],
+                currentNumber: currentNumber,
+                currentColor: currentColor,
+                player1MaxNumCards: player1MaxNumCards,
+                player2MaxNumCards: player2MaxNumCards
+            });
+
+        }
+        else if(user === 'player2' && whoseTurn === 'player2'){
+            const copyOfPlayer2Deck = [...player2Deck];
+
+            const discardCard1 = copyOfPlayer2Deck.pop();
+            const discardCard2 = copyOfPlayer2Deck.pop();
+
+            const updatedPlayer1Deck = [...player1Deck];
+            const updatedPlayer2Deck = [...player2Deck.filter((index)=>(index!=discardCard1&&index!=discardCard2))];
+
+            // update maxNumCards
+            if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
+            if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
+
+            if (!isMuted) playShuffleSound;
+            
+            socket.emit("updateGameState",{
+                isGameOver: checkGameOver(updatedPlayer2Deck),
+                winner: checkWinner(updatedPlayer2Deck, 'player2'),
+                whoseTurn: 'player2',
+                player1Deck: [...updatedPlayer1Deck],
+                player2Deck: [...updatedPlayer2Deck],
+                drawPile: [...copyOfDrawPile],
+                playedPile: [...playedPile],
+                currentNumber: currentNumber,
+                currentColor: currentColor,
+                player1MaxNumCards: player1MaxNumCards,
+                player2MaxNumCards: player2MaxNumCards
+            });
+
+        }
+        else{}        
+        
+    }
+
+    return {getIsGameOver, getWinner, getWhoseturn, getPlayer1Deck, getPlayer2Deck, getDrawPile, getPlayedPile, getCurrentNumber,getCurrentColor,getPlayer1MaxNumCards,getPlayer2MaxNumCards, initGame, onCardPlayed, onCardDrawn,playShuffleSound,setUnoPressed, cheatFunction}
 })();

@@ -241,6 +241,27 @@ const GameInit = (function() {
     return { initialize };
 })();
 
+
+const GameRunning = (function(){
+
+    const updateGame = function(){
+        //change data
+
+
+        // check winning condition 
+        // if (getWinner != ""){
+            //break; 
+            //GameEnd
+        //}
+    }
+
+
+    return {updateGame};
+
+})();
+
+
+
 const UI = (function() {
 
     const components = [SignInForm, HomePanel, OnlineUsersPanel, GamePanel];
