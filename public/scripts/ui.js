@@ -188,7 +188,7 @@ const GamePanel = (function() {
 
     const startGame = function() {
 
-        if (player == "player1") {
+        if (player === "player1") {
             $("#topInfoText").text("Player 1 please click start to start the game");
 
             $("#start-game").show();
@@ -198,7 +198,7 @@ const GamePanel = (function() {
                 $("#start-game").hide();
             });
         }
-        if (player == "player2") {
+        if (player === "player2") {
             $("#topInfoText").text("Wait player 1 to start the game");
 
         }
@@ -212,7 +212,8 @@ const GameInit = (function() {
 
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
-        $("#topInfoText").text("You are " + GamePanel.getPlayer());
+        $("#topInfoText").text(whoseTurn + " Turn");
+        $("#middleInfo").append("<p>You are " + GamePanel.getPlayer() + "</p>");
 
         if(GamePanel.getPlayer() == "player1"){      
             for( var i = 0; i < player2Deck.length; i++){
@@ -235,9 +236,21 @@ const GameInit = (function() {
 
         $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
 
+
+
+        // GameInit.updateGame(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
+
     }
 
-    return { initialize };
+    const updateGame = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
+        while(!isGameOver){
+            // console.log("123");
+        }
+
+
+    }
+
+    return { initialize, updateGame };
 })();
 
 const UI = (function() {
