@@ -195,6 +195,7 @@ io.on("connection", (socket) => {
         if (numberOfUsersInRoom === 0) {
             socket.emit("first user")
         } else {
+            socket.emit("second user")
             io.to(user.room).emit("ready to start")
         }
         
@@ -218,6 +219,8 @@ io.on("connection", (socket) => {
         // io.to(newUser.room).emit('roomData', {room: newUser.room, users: getUsersInRoom(newUser.room)})
         // socket.emit('currentUserData', {name: newUser.name})
         // io.to(newUser.room).emit("add message", JSON.stringify(new_message));
+
+        socket.emit('currentUserData', {usersdata})
 
     })
 
