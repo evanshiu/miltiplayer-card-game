@@ -7,6 +7,7 @@ const Socket = (function() {
         return socket;
     };
 
+
     // This function connects the server and initializes the socket
     const connect = function() {
 
@@ -34,7 +35,12 @@ const Socket = (function() {
 
         socket.on("first user", () => {
             GamePanel.FirstUser();
+            GamePanel.setPlayer("player1");
             alert("You are player 1, waiting for player 2")
+        });
+
+        socket.on("second user", () => {
+            GamePanel.setPlayer("player2");
         });
 
         socket.on("ready to start", () => {
