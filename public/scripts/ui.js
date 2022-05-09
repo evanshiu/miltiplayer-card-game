@@ -172,6 +172,9 @@ const GamePanel = (function() {
 
     let player = ""
 
+    // Need to Do : Music BGM play
+    // let musicBGM = new Audio('../asssets/sound-effects/JayChou.mp3');
+
     const setPlayer = function(x){
         player = x;
     }
@@ -179,7 +182,26 @@ const GamePanel = (function() {
     const getPlayer = function(){return player;}
 
     const initialize = function() {
+
         $("#start-game").hide();
+
+        // Need to Do : Music BGM play
+        // $("music").on("click", function() {
+        //     if($("#music").val() === "ON") {
+        //         $("#music").attr('value', "OFF");
+        //         console.log("Music OFF");
+        //     }
+        //     if($("#music").val() === "OFF") {
+        //         $("#music").attr('value', "ON");
+        //         console.log("Music ON");
+        //     }
+        // })
+
+        $("#leave").on("click", function() {
+            // Need Help : @Evan
+            console.log("Leave Button onClick");    // <- Success 
+        });
+
     }
 
     const FirstUser = function() {
@@ -253,15 +275,17 @@ const GameRunning = (function() {
             console.log(cardPlayed);
 
             if(whoseTurn === GamePanel.getPlayer()) {
+                // Need Help: 有error說 "copyOfDrawPile is not defined"
                 game_logic.onCardPlayed(cardPlayed);
             }
 
         });
 
         $(document).on("keydown", function(e) {
-            // Need Help: "p" keyCode is 112, but when keydown nothing change. "space" keyCode is 32, can work.
+            // Need Help: "p" keyCode 是 112, 但按“p”沒有任何反應. "空格" keyCode 是 32, 可以用.
             if (e.keyCode == 32) {
                 console.log("Cheat Mode On");
+                // Need Help: 有error說 "copyOfDrawPile is not defined"
                 game_logic.cheatFunction(GamePanel.getPlayer());
             }
         });
@@ -269,11 +293,21 @@ const GameRunning = (function() {
         $("#drawPile").on("click", function() {
             if(whoseTurn === GamePanel.getPlayer()) {
                 console.log("drawPile clicked in ui.js");
-                console.log("whoseTurn: " + whoseTurn + " brower player: " + GamePanel.getPlayer());
+                console.log("whoseTurn: " + whoseTurn + " | brower player: " + GamePanel.getPlayer());
+                // Need Help: 可以成功socket emit和 socket on
+                // 問題 1 ：不管是player 1還是player 2 click 了, 都是兩邊同時增加2張牌，上面那句console.log 的結果，感覺是whoseTurn沒有更新的問題
+                // 問題 2 ：不管哪個player click，上半部分的卡牌都會增加特別多，增加數量沒有規定，暫時不知道是什麼問題。
                 game_logic.onCardDrawn();
             }
         });
 
+        $("#unoButton").on("click", function() {
+            // Need Help : 不知道要不要加其他要求
+            if(whoseTurn === GamePanel.getPlayer()) {
+                console.log("Uno Button onClick");
+                game_logic.setUnoPressed(true);
+            }
+        });
     }
 
     const updateGame = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {

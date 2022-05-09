@@ -63,7 +63,7 @@ const game_logic = (function() {
     const setCurrentColor = (x) => {currentColor = x;}
     const setPlayer1MaxNumCards = (x) => {player1MaxNumCards = x;}
     const setPlayer2MaxNumCards = (x) => {player2MaxNumCards = x;}
-
+    const setIsMuted = (x) => {isMuted = x;}
 
     /*
     const setPlayer1TimeSpent = (x) => {player1TimeSpent = x;}
@@ -1360,5 +1360,22 @@ const game_logic = (function() {
         
     }
 
-    return {getIsGameOver, getWinner, getWhoseturn, getPlayer1Deck, getPlayer2Deck, getDrawPile, getPlayedPile, getCurrentNumber,getCurrentColor,getPlayer1MaxNumCards,getPlayer2MaxNumCards, initGame, onCardPlayed, onCardDrawn,playShuffleSound,setUnoPressed, cheatFunction}
+    return{ getIsGameOver, 
+            getWinner, 
+            getWhoseturn, 
+            getPlayer1Deck, 
+            getPlayer2Deck, 
+            getDrawPile, 
+            getPlayedPile, 
+            getCurrentNumber, 
+            getCurrentColor, 
+            getPlayer1MaxNumCards, 
+            getPlayer2MaxNumCards, 
+            initGame, 
+            onCardPlayed, 
+            onCardDrawn, 
+            playShuffleSound, 
+            setUnoPressed, 
+            cheatFunction,
+            setIsMuted }
 })();
