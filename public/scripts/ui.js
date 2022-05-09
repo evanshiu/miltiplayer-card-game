@@ -170,6 +170,14 @@ const OnlineUsersPanel = (function() {
 
 const GamePanel = (function() {
 
+    let player = ""
+
+    const setPlayer = function(x){
+        player = x;
+    }
+
+    const getPlayer = function(){return player;}
+
     const initialize = function() {
         $("#start-game").hide();
     }
@@ -178,17 +186,19 @@ const GamePanel = (function() {
         $("#topInfoText").text("Waiting for other player to join the game.");
     }
 
-    const startGame = function() {
+    const startGame = function(user) {
         $("#topInfoText").text("Player 1 please click start to start the game");
         $("#start-game").show();
 
         $("#start-game").on("click", function(){
             game_logic.initGame();
             $("#start-game").hide();
+            console.log(player)
         });
+
     }
 
-    return {initialize, startGame, FirstUser};
+    return {initialize, startGame, FirstUser, setPlayer, getPlayer};
 })();
 
 

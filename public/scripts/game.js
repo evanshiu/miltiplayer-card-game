@@ -7,6 +7,10 @@ const game_logic = (function() {
     const NUM_FOR_WILDCARD = 300;
     const NUM_FOR_D4_CARD = 400;
 
+
+
+
+
     //init objects in socket 
     let isGameOver = true;
     let winner = '';
@@ -19,6 +23,7 @@ const game_logic = (function() {
     let currentColor = '';
     let player1MaxNumCards = player1Deck.length;
     let player2MaxNumCards = player2Deck.length;
+
 
     /*
     let player1TimeSpent = 0;
@@ -44,6 +49,7 @@ const game_logic = (function() {
     const getCurrentColor = () => {return currentColor}
     const getPlayer1MaxNumCards = () => {return player1MaxNumCards}
     const getPlayer2MaxNumCards = () => {return player2MaxNumCards}
+   
 
     //setters
     const setIsGameOver = (x) => {isGameOver = x;}
@@ -57,6 +63,7 @@ const game_logic = (function() {
     const setCurrentColor = (x) => {currentColor = x;}
     const setPlayer1MaxNumCards = (x) => {player1MaxNumCards = x;}
     const setPlayer2MaxNumCards = (x) => {player2MaxNumCards = x;}
+
 
     /*
     const setPlayer1TimeSpent = (x) => {player1TimeSpent = x;}
@@ -123,6 +130,8 @@ const game_logic = (function() {
         // Reset Uno button
         setUnoPressed(false);
     });
+
+
 
     // Run 1 time on game start
     const initGame = function() {
