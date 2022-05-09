@@ -213,7 +213,7 @@ const GameInit = (function() {
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
         $("#topInfoText").text(whoseTurn + " Turn");
-        $("#middleInfo").append("<p>You are " + GamePanel.getPlayer() + "</p>");
+        $("#room-role").text("You are " + GamePanel.getPlayer());
 
         if(GamePanel.getPlayer() == "player1"){      
             for( var i = 0; i < player2Deck.length; i++){
@@ -234,7 +234,8 @@ const GameInit = (function() {
             }
         }
 
-        $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
+        // $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
+        $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
 
         GameRunning.checkClick(whoseTurn);
     }
@@ -259,8 +260,18 @@ const GameRunning = (function() {
 
         $(document).on("keydown", function(e) {
             // Need Help: "p" keyCode is 112, but when keydown nothing change. "space" keyCode is 32, can work.
-            if (e.keyCode == 32)
-                console.log("OH Yes");
+            if (e.keyCode == 32) {
+                console.log("Cheat Mode On");
+                game_logic.cheatFunction(GamePanel.getPlayer());
+            }
+        });
+
+        $("#drawPile").on("click", function() {
+            if(whoseTurn === GamePanel.getPlayer()) {
+                console.log("drawPile clicked in ui.js");
+                console.log("whoseTurn: " + whoseTurn + " brower player: " + GamePanel.getPlayer());
+                game_logic.onCardDrawn();
+            }
         });
 
     }
@@ -271,7 +282,7 @@ const GameRunning = (function() {
             console.log("HI update Game now");
 
             $("#topInfoText").text(whoseTurn + " Turn");
-            $("#middleInfo").append("<p>You are " + GamePanel.getPlayer() + "</p>");
+            $("#room-role").text("You are " + GamePanel.getPlayer());
     
             if(GamePanel.getPlayer() == "player1"){      
                 for( var i = 0; i < player2Deck.length; i++){
@@ -292,7 +303,7 @@ const GameRunning = (function() {
                 }
             }
     
-            $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
+            $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
     
             GameRunning.checkClick(whoseTurn);
         }

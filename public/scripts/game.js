@@ -919,6 +919,8 @@ const game_logic = (function() {
     // On Card Drawn
     const onCardDrawn = ()=>{
 
+        console.log("onCardDrawn in game.js");
+
         const drawnBy = whoseTurn;
 
         if(drawnBy === 'player1'){
