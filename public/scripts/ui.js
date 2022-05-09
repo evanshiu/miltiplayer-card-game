@@ -82,7 +82,7 @@ const HomePanel = (function() {
             // Send a signout request
             Authentication.signout(
                 () => {
-                    // Socket.disconnect();
+                    Socket.disconnect();
 
                     hide();
                     SignInForm.show();

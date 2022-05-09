@@ -70,6 +70,15 @@ const Socket = (function() {
             // OnlineUsersPanel.removeUser(user);
         });
 
+        // the other user has left room
+        socket.on("user left room", () => {
+            alert("Other user has disconnected, game over.");
+            
+            Socket.disconnect();
+            SignInForm.show();
+
+        });
+
     };
 
     // This function disconnects the socket from the server

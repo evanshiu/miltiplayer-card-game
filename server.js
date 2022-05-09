@@ -184,7 +184,6 @@ io.on("connection", (socket) => {
             return;
         }
             
-
         socket.join(newUser.room);
 
         console.log(newUser.room);
@@ -227,8 +226,15 @@ io.on("connection", (socket) => {
             const {username} = socket.request.session.user;
             if (onlineUsers[username]) delete onlineUsers[username];
             console.log(onlineUsers);
-            // const user = getUser(socket.id)
-            // io.to(user.room).emit("remove user", JSON.stringify(socket.request.session.user));
+
+            const user = getUser(socket.id);
+            //notify room user left
+            //fix if not in room
+            io.to(user.room).emit("user left room");
+
+            
+            //exit room too
+            removeUser(socket.id);
         }
     });
     
