@@ -247,8 +247,9 @@ const GameRunning = (function() {
     const checkClick = function(whoseTurn) {
         $("#downerDeck img").on("click", function() {
             var src = $(this).attr("src");
-            var cardPlayed = src.replace("./asssets/cards-front/", "");
-            console.log(cardPlayed.replace(".png", ""));
+            src = src.replace("./asssets/cards-front/", "");
+            var cardPlayed = src.replace(".png", "");
+            console.log(cardPlayed);
 
             if(whoseTurn === GamePanel.getPlayer()) {
                 game_logic.onCardPlayed(cardPlayed);
