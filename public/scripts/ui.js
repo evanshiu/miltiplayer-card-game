@@ -213,13 +213,13 @@ const GameInit = (function() {
 
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
-        if(GamePanel.getPlayer() == "player1"){
-            for( var i = 0; i < player1Deck.length; i++){
-                $("#upperDeck").append($("<img src='./asssets/cards-front/" + player1Deck[i] + ".png'>"));
-            }
-            
+        if(GamePanel.getPlayer() == "player1"){            
             for( var i = 0; i < player2Deck.length; i++){
-                $("#downerDeck").append($("<img src='./asssets/card-back.png'>"));
+                $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
+            }
+
+            for( var i = 0; i < player1Deck.length; i++){
+                $("#downerDeck").append($("<img src='./asssets/cards-front/" + player1Deck[i] + ".png'>"));
             }
         }
         if(GamePanel.getPlayer() == "player2"){
