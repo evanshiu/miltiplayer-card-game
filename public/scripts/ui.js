@@ -196,7 +196,6 @@ const GamePanel = (function() {
             $("#start-game").on("click", function(){
                 game_logic.initGame();
                 $("#start-game").hide();
-                console.log(player)
             });
         }
         if (player == "player2") {
@@ -213,7 +212,9 @@ const GameInit = (function() {
 
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
-        if(GamePanel.getPlayer() == "player1"){            
+        $("#topInfoText").text("You are " + GamePanel.getPlayer());
+
+        if(GamePanel.getPlayer() == "player1"){      
             for( var i = 0; i < player2Deck.length; i++){
                 $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
             }
@@ -232,6 +233,7 @@ const GameInit = (function() {
             }
         }
 
+        $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
 
     }
 
