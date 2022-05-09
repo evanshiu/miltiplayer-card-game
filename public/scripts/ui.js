@@ -236,9 +236,24 @@ const GameInit = (function() {
 
         $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
 
+        GameRunning.checkClick();
     }
 
     return { initialize };
+})();
+
+const GameRunning = (function() {
+
+    const checkClick = function() {
+        $("#downerDeck img").on("click", function(){
+            console.log("OMG can work");
+        });
+
+        // $(".gameBackground")
+    }
+
+    return { checkClick };
+
 })();
 
 const UI = (function() {
