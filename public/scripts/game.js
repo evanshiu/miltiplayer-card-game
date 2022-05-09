@@ -128,9 +128,11 @@ const game_logic = (function() {
         setPlayer1MaxNumCards(player1MaxNumCards);
         setPlayer2MaxNumCards(player2MaxNumCards);
 
-        GameRunning.updateGame()
         // Reset Uno button
         setUnoPressed(false);
+
+        console.log("in Game js update game state");
+        GameRunning.updateGame(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
     });
 
 
@@ -190,6 +192,8 @@ const game_logic = (function() {
     }
 
     const onCardPlayed = (playedCard) =>{
+
+        console.log("in Game js on card played");
 
         switch(playedCard){
             // case where it's number card or reverse card

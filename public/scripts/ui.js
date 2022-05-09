@@ -234,9 +234,9 @@ const GameInit = (function() {
             }
         }
 
-        $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
+        $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
 
-        GameRunning.checkClick();
+        GameRunning.checkClick(whoseTurn);
     }
 
     return { initialize };
@@ -244,15 +244,73 @@ const GameInit = (function() {
 
 const GameRunning = (function() {
 
-    const checkClick = function() {
-        $("#downerDeck img").on("click", function(){
-            console.log("OMG can work");
+    const checkClick = function(whoseTurn) {
+        $("#downerDeck img").on("click", function() {
+            var src = $(this).attr("src");
+            var cardPlayed = src.replace("./asssets/cards-front/", "");
+            console.log(cardPlayed.replace(".png", ""));
+
+            if(whoseTurn === GamePanel.getPlayer()) {
+                game_logic.onCardPlayed(cardPlayed);
+            }
+
         });
 
-        // $(".gameBackground")
+        $(document).on("keydown", function(e) {
+            // Need Help: "p" keyCode is 112, but when keydown nothing change. "space" keyCode is 32, can work.
+            if (e.keyCode == 32)
+                console.log("OH Yes");
+        });
+
     }
 
-    return { checkClick };
+    const updateGame = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
+        
+        if (!isGameOver) {
+            console.log("HI update Game now");
+
+            $("#topInfoText").text(whoseTurn + " Turn");
+            $("#middleInfo").append("<p>You are " + GamePanel.getPlayer() + "</p>");
+    
+            if(GamePanel.getPlayer() == "player1"){      
+                for( var i = 0; i < player2Deck.length; i++){
+                    $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
+                }
+    
+                for( var i = 0; i < player1Deck.length; i++){
+                    $("#downerDeck").append($("<img src='./asssets/cards-front/" + player1Deck[i] + ".png'>"));
+                }
+            }
+            if(GamePanel.getPlayer() == "player2"){
+                for( var i = 0; i < player1Deck.length; i++){
+                    $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
+                }
+                
+                for( var i = 0; i < player2Deck.length; i++){
+                    $("#downerDeck").append($("<img src='./asssets/cards-front/" + player2Deck[i] + ".png'>"));
+                }
+            }
+    
+            $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
+    
+            GameRunning.checkClick(whoseTurn);
+        }
+        else {
+            GameEnd.GameEndWin(winner);
+        }
+    }
+
+    return { checkClick, updateGame };
+
+})();
+
+const GameEnd = (function() {
+
+    const GameEndWin = function(winner) {
+        console.log("Game Over" + winner);
+    }
+
+    return { GameEndWin };
 
 })();
 
