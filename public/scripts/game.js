@@ -1,5 +1,5 @@
 // main game 
-const game_logic = (function() {
+var game_logic = (function() {
 
     //init card settings
     const NUM_FOR_SKIP_CARD = 100;    

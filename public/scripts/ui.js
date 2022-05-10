@@ -21,7 +21,7 @@ const SignInForm = (function() {
                     HomePanel.update(Authentication.getUser());
                     HomePanel.show();
                     Socket.connect();
-                    $('<script src="scripts/game.js"></script>').appendTo(document.body)
+                    $('<script src="scripts/game.js" id="game-js"></script>').appendTo(document.body)
                 },
                 (error) => { $("#signin-message").text(error); }
             );
@@ -80,6 +80,8 @@ const HomePanel = (function() {
 
         // Click event for the signout button
         $("#signout-button").on("click", () => {
+            let gamefile = document.getElementById("game-js");
+            gamefile.remove()
             // Send a signout request
             Authentication.signout(
                 () => {
