@@ -200,8 +200,6 @@ const GamePanel = (function() {
 
     let player = ""
 
-    // Need to Do : Music BGM play
-    // let musicBGM = new Audio('../asssets/sound-effects/JayChou.mp3');
 
     const setPlayer = function(x){
         player = x;
@@ -214,17 +212,19 @@ const GamePanel = (function() {
         $("#start-game").hide();
         $("#middleInfo").hide();
 
-        // Need to Do : Music BGM play
-        // $("music").on("click", function() {
-        //     if($("#music").val() === "ON") {
-        //         $("#music").attr('value', "OFF");
-        //         console.log("Music OFF");
-        //     }
-        //     if($("#music").val() === "OFF") {
-        //         $("#music").attr('value', "ON");
-        //         console.log("Music ON");
-        //     }
-        // })
+        // Music BGM Play
+        document.getElementById("music").addEventListener("click", function(){
+            var audio = document.getElementById('musicAudio');
+          if(this.className == 'is-playing'){
+            this.className = "";
+            this.innerHTML = "Music Pause"
+            audio.pause();
+          }else{
+            this.className = "is-playing";
+            this.innerHTML = "Music Playing";
+            audio.play();
+          }
+        });
 
         $("#leave").on("click", function() {
             // Need Help : @Evan

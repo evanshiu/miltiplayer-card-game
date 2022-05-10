@@ -12,7 +12,8 @@
                 <h1 id="topInfoText">Welcome to Uno Game</h1>
                 <span>
                     <button id="start-game">Start</button>
-                    <button id="music" value="OFF">Music</button>
+                    <audio id="musicAudio" hidden src="./asssets/sound-effects/JayChou.mp3" type="audio/mpeg"></audio>
+                    <button id="music">Play Music</button>
                     <button id="sound">Sound</button>
                     <button id="leave">Leave</button>
                 </span>
@@ -145,7 +146,6 @@
                 // Initialize the UI
                 UI.initialize();
                 SignInForm.show();
-        
                 // // Validate the signin
                 // Authentication.validate(
                 //     () => {
