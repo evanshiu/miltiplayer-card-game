@@ -141,6 +141,8 @@ const OnlineUsersPanel = (function() {
             // alert(content);
 
             Socket.joinRoom(content);
+            $("#gamePage").show();
+            $("#home-container-overlay").hide();
             
 
             $("#leave").on("click", function(){
@@ -325,7 +327,11 @@ const GameRunning = (function() {
             }
         });
 
+        var has_alert=false;
+
         $("#drawPile").on("click", function() {
+            if(has_alert) return;
+            has_alert = true;
             if(whoseTurn === GamePanel.getPlayer()) {
                 console.log("drawPile clicked in ui.js");
                 console.log("whoseTurn: " + whoseTurn + " | browser player: " + GamePanel.getPlayer());
@@ -334,6 +340,7 @@ const GameRunning = (function() {
                 // 問題 2 ：不管哪個player click，上半部分的卡牌都會增加特別多，增加數量沒有規定，暫時不知道是什麼問題。
                 game_logic.onCardDrawn();
                 console.log("drawPile clicked end in ui.js");
+                window.setTimeout(function() { has_alert=false; }, 1000);
             }
             else{}
         });
