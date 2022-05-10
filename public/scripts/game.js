@@ -936,9 +936,7 @@ const game_logic = (function() {
 
         console.log("onCardDrawn in game.js");
 
-        const drawnBy = whoseTurn;
-
-        if(drawnBy === 'player1'){
+        if(whoseTurn === 'player1' && whoseTurn === GamePanel.getPlayer()){
             //copy drawPile
             const copyOfDrawPile = [...drawPile];
             // pop one for the card drawn
@@ -948,7 +946,7 @@ const game_logic = (function() {
             const drawnCardColor = drawnCard.charAt(drawnCard.length-1);
 
             if(drawnCardColor === currentColor && (drawnCard === 'skipR'||drawnCard === 'skipG'||drawnCard === 'skipB'||drawnCard === 'skipY')){
-                alert('The card you drew is played for you.');
+                alert('You drew a Skip card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -978,7 +976,7 @@ const game_logic = (function() {
                 const drawCard1forD2 = copyOfDrawPile.pop();
                 const drawCard2forD2 = copyOfDrawPile.pop();
 
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 2 card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1005,7 +1003,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1034,7 +1032,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'D4W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 4 Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1069,7 +1067,7 @@ const game_logic = (function() {
 
             }   
             else if((drawnCardColor === currentColor) && (drawnCardNumber === currentNumber)){
-                alert('The card you drew is played for you.');
+                alert('You drew ' + drawnCard + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1122,7 +1120,7 @@ const game_logic = (function() {
             }
 
         }
-        else{ //drawn by player2
+        else if (whoseTurn === 'player2' && whoseTurn === GamePanel.getPlayer()){ //drawn by player2
             //copy drawPile
             const copyOfDrawPile = [...drawPile];
             // pop one for the card drawn
@@ -1132,7 +1130,7 @@ const game_logic = (function() {
             const drawnCardColor = drawnCard.charAt(drawnCard.length-1);
 
             if(drawnCardColor === currentColor && (drawnCard === 'skipR'||drawnCard === 'skipG'||drawnCard === 'skipB'||drawnCard === 'skipY')){
-                alert('The card you drew is played for you.');
+                alert('You drew a Skip card with color ' + drawnCardColor+ '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1162,7 +1160,7 @@ const game_logic = (function() {
                 const drawCard1forD2 = copyOfDrawPile.pop();
                 const drawCard2forD2 = copyOfDrawPile.pop();
 
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 2 card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck,drawCard1forD2,drawCard2forD2];
@@ -1189,7 +1187,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1218,7 +1216,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'D4W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 4 Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1253,7 +1251,7 @@ const game_logic = (function() {
 
             }   
             else if((drawnCardColor === currentColor) && (drawnCardNumber === currentNumber)){
-                alert('The card you drew is played for you.');
+                alert('You drew ' + drawnCard + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1305,6 +1303,7 @@ const game_logic = (function() {
                 });
             }
         }
+        else {}
         
     }
 
