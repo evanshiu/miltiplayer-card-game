@@ -6,7 +6,7 @@
         <link href="index.css" rel="stylesheet">
     </head>
     <body>
-        <div class="gameBackground">
+        <div id="gamePage" class="gameBackground">
             <div class="topInfo">
                 <img src="./asssets/logo.png" alt="UNO Logo">
                 <h1 id="topInfoText">Welcome to Uno Game</h1>
@@ -22,7 +22,6 @@
                 <div id="upperDeck"></div>
                 <div id="middleInfo">
                     <button id="drawPile">Draw Card</button>
-                    <!-- <div id="playedPile"></div> -->
                     <img id="playedPile" src="" />
                     <button id="unoButton">Uno</button>
                     <p id="room-role"></p>
@@ -47,33 +46,64 @@
 
             <div id="main-panel" class="row">
                 <div id="uno-panel" class="col">
+                    <img src="./asssets/HomeLogo.jpeg" />
+
+                    <div>
+                        Uno is the highly popular card game played by millions around the globe. This game is played by matching and then discarding the cards in one’s hand till none are left. 
+                    </div>
+
+                    <div>
+                        Setup: The game is for 2 players. Every player starts with seven cards. The rest of the cards are placed in a Draw Pile. Next to the pile a space should be designated for a Played Pile. The top card should be placed in the Played Pile, and the game begins!
+                    </div>
+
+                    <div>
+                        Game Play: The first Turn is Player 1. Every player views his/her cards and tries to match the card in the Played Pile.
+                    </div>
+
+                    <div>
+                        You have to match either by the number, color, or the symbol/Action. For instance, if the Played Pile has a red card that is an 8 you have to place either a red card or a card with an 8 on it. You can also play a Wildcard (which can alter current color in play) or a Draw 4 Wildcard on any played card (without the need to match anything).
+                    </div>
+
+                    <div>
+                        If the player has no matches or they choose not to play any of their cards even though they might have a match, they must draw a card from the Draw pile. If that card drawn can be played, the player should play it. Otherwise, the player will keep the card, and the game moves on to the next person in turn.
+                    </div>
+
+                    <div>
+                        Take note that you can only put down one card at a time; you cannot stack two or more cards together on the same turn. For example, you cannot put down a Draw Two on top of another Draw Two, or Wild Draw Four during the same turn, or put down two Wild Draw Four cards together.
+                    </div>
+
+                    <div>
+                        PLayer need to click "Uno" button before has one card left. If they not click "Uno" button, that player will draw two new cards as a penalty. 
+                    </div>
+
+                    <div>
+                        Once a player has no cards remaining, the game round is over.
+                    </div>
 
                 </div>
     
                 <div id="online-users-panel" class="col">
                     <div class="join-container">
-                        <main class="join-main">
-                            <form id="join-input-form">
-                                <div class="form-control">
-                                    <label for="room">Room</label>
-                                    <input
-                                        type="text"
-                                        name="room"
-                                        id="room"
-                                        placeholder="Enter room..."
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" class="btn">Join/Create Room</button>
-                            </form>
-                        </main>
+                        <form id="join-input-form">
+                            <div class="form-control">
+                                <div for="room">Room</div>
+                                <input
+                                    type="text"
+                                    name="room"
+                                    id="room"
+                                    placeholder="Enter room number"
+                                    required
+                                />
+                            </div>
+                            <button type="submit" class="btn">Join/Create Room</button>
+                        </form>
                     </div>
                     <div id="online-users-area" class="col"></div>
                 </div>
             </div>
         </div>
 
-        <div id="signin-overlay" class="overlay row">
+        <div id="signin-overlay" class="signOverlay row">
             <div class="content shadow row">
                 <form id="signin-form" class="col">
                     <div class="caption">SIGN IN WITH YOUR ACCOUNT</div>

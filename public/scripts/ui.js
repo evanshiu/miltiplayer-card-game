@@ -3,6 +3,7 @@ const SignInForm = (function() {
     const initialize = function() {
         // Hide it
         $("#signin-overlay").hide();
+        $("#gamePage").hide();
 
         // Submit event for the signin form
         $("#signin-form").on("submit", (e) => {
@@ -131,7 +132,8 @@ const OnlineUsersPanel = (function() {
             // alert(content);
 
             Socket.joinRoom(content);
-
+            $("#gamePage").show();
+            $("#home-container-overlay").hide();
 
             // socket = Socket.getSocket();
             // socket.emit('joinRoom', room );
@@ -142,6 +144,7 @@ const OnlineUsersPanel = (function() {
     };
 
     // This function updates the online users panel
+    // Need Help : @Evan need to do this part
     const update = function(onlineUsers) {
         const onlineUsersArea = $("#online-users-area");
 
@@ -184,6 +187,7 @@ const GamePanel = (function() {
     const initialize = function() {
 
         $("#start-game").hide();
+        $("#middleInfo").hide();
 
         // Need to Do : Music BGM play
         // $("music").on("click", function() {
@@ -200,18 +204,20 @@ const GamePanel = (function() {
         $("#leave").on("click", function() {
             // Need Help : @Evan
             console.log("Leave Button onClick");    // <- Success 
+            $("#home-container-overlay").show();    // 要把homepage show回來
+
         });
 
     }
 
     const FirstUser = function() {
-        $("#topInfoText").text("Waiting for other player to join the game.");
+        $("#topInfoText").text("Waiting other player...");
     }
 
     const startGame = function() {
 
         if (player === "player1") {
-            $("#topInfoText").text("Player 1 please click start to start the game");
+            $("#topInfoText").text("Please click the start button.");
 
             $("#start-game").show();
 
@@ -221,7 +227,7 @@ const GamePanel = (function() {
             });
         }
         if (player === "player2") {
-            $("#topInfoText").text("Wait player 1 to start the game");
+            $("#topInfoText").text("Wait for start the game.");
 
         }
     }
@@ -234,8 +240,10 @@ const GameInit = (function() {
 
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
+        $("#middleInfo").show();
         $("#topInfoText").text(whoseTurn + " Turn");
         $("#room-role").text("You are " + GamePanel.getPlayer());
+        // $("#playerView img").style.width = "calc(780px /" +  + ")";
 
         if(GamePanel.getPlayer() == "player1"){      
             for( var i = 0; i < player2Deck.length; i++){
