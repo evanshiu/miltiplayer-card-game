@@ -321,6 +321,9 @@ const GameRunning = (function() {
             $("#topInfoText").text(whoseTurn + " Turn");
             $("#room-role").text("You are " + GamePanel.getPlayer());
     
+            $("#upperDeck").empty();
+            $("#downerDeck").empty();
+
             if(GamePanel.getPlayer() == "player1"){      
                 for( var i = 0; i < player2Deck.length; i++){
                     $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
