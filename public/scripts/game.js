@@ -1,15 +1,11 @@
 // main game 
-const game_logic = (function() {
+var game_logic = (function() {
 
     //init card settings
     const NUM_FOR_SKIP_CARD = 100;    
     const NUM_FOR_D2_CARD = 200;    
     const NUM_FOR_WILDCARD = 300;
     const NUM_FOR_D4_CARD = 400;
-
-
-
-
 
     //init objects in socket 
     let isGameOver = true;
@@ -49,6 +45,7 @@ const game_logic = (function() {
     const getCurrentColor = () => {return currentColor}
     const getPlayer1MaxNumCards = () => {return player1MaxNumCards}
     const getPlayer2MaxNumCards = () => {return player2MaxNumCards}
+    const getIsMuted = () => {return isMuted;}
    
 
     //setters
@@ -63,7 +60,7 @@ const game_logic = (function() {
     const setCurrentColor = (x) => {currentColor = x;}
     const setPlayer1MaxNumCards = (x) => {player1MaxNumCards = x;}
     const setPlayer2MaxNumCards = (x) => {player2MaxNumCards = x;}
-
+    const setIsMuted = (x) => {isMuted = x;}
 
     /*
     const setPlayer1TimeSpent = (x) => {player1TimeSpent = x;}
@@ -77,7 +74,8 @@ const game_logic = (function() {
 
     // Sound Handler
     const playShuffleSound = () =>{
-        let shuffleSound = new Audio('/public/asssets/sound-effects/shuffle.mp3');
+        var shuffleSound = document.getElementById('soundEffect')
+        console.log("button is now: "+ !isMuted + "play some sound")
         shuffleSound.play()
     }
 
@@ -128,9 +126,12 @@ const game_logic = (function() {
         setPlayer1MaxNumCards(player1MaxNumCards);
         setPlayer2MaxNumCards(player2MaxNumCards);
 
-        GameRunning.updateGame()
         // Reset Uno button
         setUnoPressed(false);
+
+        GameRunning.updateGame(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
+
+        
     });
 
 
@@ -190,7 +191,7 @@ const game_logic = (function() {
     }
 
     const onCardPlayed = (playedCard) =>{
-
+        console.log("1")
         switch(playedCard){
             // case where it's number card or reverse card
             case '0R': case '1R': case '2R': case '3R': case '4R': case '5R': case '6R': case '7R': case '8R': case '9R': case '_R': case '0G': case '1G': case '2G': case '3G': case '4G': case '5G': case '6G': case '7G': case '8G': case '9G': case '_G': case '0B': case '1B': case '2B': case '3B': case '4B': case '5B': case '6B': case '7B': case '8B': case '9B': case '_B': case '0Y': case '1Y': case '2Y': case '3Y': case '4Y': case '5Y': case '6Y': case '7Y': case '8Y': case '9Y': case '_Y': {
@@ -198,10 +199,14 @@ const game_logic = (function() {
                 const playedCardNumber = playedCard.charAt(0);
                 const playedCardColor = playedCard.charAt(1);
 
+                console.log("1a")
+
                 if(currentColor === playedCardColor || currentNumber === playedCardNumber){
                     if(whoseTurn === 'player1'){
                         // Save the index on player's deck for the playedCard 
                         const deckIndex = player1Deck.indexOf(playedCard);
+
+                        console.log("2")
                         // didn't press uno
                         if(player1Deck.length === 2 && !unoPressed){
                             alert('Did not press Uno.');
@@ -219,7 +224,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -236,16 +241,19 @@ const game_logic = (function() {
                             });
                         }
                         else{   
+                            const copyOfDrawPile = [...drawPile];
+                            console.log("3")
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck];
+                            console.log("4")
 
                             // update maxNumCards
                             if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
-
+                            console.log({updatedPlayer1Deck,updatedPlayer2Deck,drawPile,copyOfDrawPile,playedPile})
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -282,7 +290,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -298,7 +306,9 @@ const game_logic = (function() {
                                 player2MaxNumCards, player2MaxNumCards
                             });
                         }
-                        else{   
+                        else{
+                            
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck];
                             const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -308,7 +318,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -358,7 +368,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -375,7 +385,8 @@ const game_logic = (function() {
                             });
                         }
                         else{ 
-                
+                            const copyOfDrawPile = [...drawPile];
+
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck];
@@ -385,7 +396,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -422,7 +433,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -439,7 +450,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
-
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck];
                             const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -449,7 +460,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -504,7 +515,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
 
                             //send socket
                             socket.emit("updateGameState",{
@@ -522,7 +533,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
-
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck,drawCard1forD2,drawCard2forD2];
@@ -532,7 +543,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -572,7 +583,7 @@ const game_logic = (function() {
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -589,6 +600,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
+                            const copyOfDrawPile = [...drawPile];
                              // update deck
                              const updatedPlayer1Deck = [...player1Deck,drawCard1forD2,drawCard2forD2];
                              const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -598,7 +610,7 @@ const game_logic = (function() {
                              if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                             // play sound
-                            if (!isMuted) playShuffleSound;
+                            if (isMuted == false) playShuffleSound();
                             //send socket
                             socket.emit("updateGameState",{
                                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -649,7 +661,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -666,6 +678,7 @@ const game_logic = (function() {
                         });
                     }
                     else{   
+                        const copyOfDrawPile = [...drawPile];
                         // update deck
                         const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                         const updatedPlayer2Deck = [...player2Deck];
@@ -675,14 +688,14 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer1Deck),
                             winner: checkWinner(updatedPlayer1Deck, 'player1'),
                             whoseTurn: 'player2',
-                            player1Deck: [updatedPlayer1Deck],
-                            player2Deck: [updatedPlayer2Deck],
+                            player1Deck: [...updatedPlayer1Deck],
+                            player2Deck: [...updatedPlayer2Deck],
                             drawPile: [...copyOfDrawPile],
                             playedPile: [...playedPile,playedCard],
                             currentNumber: playedCardNumber,
@@ -716,7 +729,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -733,6 +746,7 @@ const game_logic = (function() {
                         });
                     }
                     else{   
+                        const copyOfDrawPile = [...drawPile];
                          // update deck
                          const updatedPlayer1Deck = [...player1Deck];
                          const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -742,7 +756,7 @@ const game_logic = (function() {
                          if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
                          
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
 
                         //send socket
                         socket.emit("updateGameState",{
@@ -796,7 +810,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -822,7 +836,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -840,8 +854,10 @@ const game_logic = (function() {
                     }
                 }
                 else{
+
+                    const playedCardNumber = NUM_FOR_D4_CARD;
                     // Let player choose color
-                    const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
+                    const playedCardColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
                     // Save the index on player's deck for the playedCard 
                     const deckIndex = player2Deck.indexOf(playedCard);
                     const copyOfDrawPile = [...drawPile];
@@ -867,7 +883,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -893,7 +909,7 @@ const game_logic = (function() {
                         if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                         // play sound
-                        if (!isMuted) playShuffleSound;
+                        if (isMuted == false) playShuffleSound();
                         //send socket
                         socket.emit("updateGameState",{
                             isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -918,9 +934,9 @@ const game_logic = (function() {
     // On Card Drawn
     const onCardDrawn = ()=>{
 
-        const drawnBy = whoseTurn;
+        console.log("onCardDrawn in game.js");
 
-        if(drawnBy === 'player1'){
+        if(whoseTurn === 'player1' && whoseTurn === GamePanel.getPlayer()){
             //copy drawPile
             const copyOfDrawPile = [...drawPile];
             // pop one for the card drawn
@@ -930,7 +946,7 @@ const game_logic = (function() {
             const drawnCardColor = drawnCard.charAt(drawnCard.length-1);
 
             if(drawnCardColor === currentColor && (drawnCard === 'skipR'||drawnCard === 'skipG'||drawnCard === 'skipB'||drawnCard === 'skipY')){
-                alert('The card you drew is played for you.');
+                alert('You drew a Skip card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -940,7 +956,8 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+                console.log("on card drawn game.js socket emit.")
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
                     winner: checkWinner(updatedPlayer1Deck, 'player1'),
@@ -960,7 +977,7 @@ const game_logic = (function() {
                 const drawCard1forD2 = copyOfDrawPile.pop();
                 const drawCard2forD2 = copyOfDrawPile.pop();
 
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 2 card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -970,7 +987,8 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -987,7 +1005,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -999,7 +1017,8 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1016,7 +1035,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'D4W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 4 Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1033,7 +1052,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1051,7 +1072,7 @@ const game_logic = (function() {
 
             }   
             else if((drawnCardColor === currentColor) && (drawnCardNumber === currentNumber)){
-                alert('The card you drew is played for you.');
+                alert('You drew ' + drawnCard + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1061,7 +1082,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1086,7 +1109,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1104,7 +1129,7 @@ const game_logic = (function() {
             }
 
         }
-        else{ //drawn by player2
+        else if (whoseTurn === 'player2' && whoseTurn === GamePanel.getPlayer()){ //drawn by player2
             //copy drawPile
             const copyOfDrawPile = [...drawPile];
             // pop one for the card drawn
@@ -1114,7 +1139,7 @@ const game_logic = (function() {
             const drawnCardColor = drawnCard.charAt(drawnCard.length-1);
 
             if(drawnCardColor === currentColor && (drawnCard === 'skipR'||drawnCard === 'skipG'||drawnCard === 'skipB'||drawnCard === 'skipY')){
-                alert('The card you drew is played for you.');
+                alert('You drew a Skip card with color ' + drawnCardColor+ '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1124,7 +1149,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
                     winner: checkWinner(updatedPlayer2Deck, 'player2'),
@@ -1144,7 +1171,7 @@ const game_logic = (function() {
                 const drawCard1forD2 = copyOfDrawPile.pop();
                 const drawCard2forD2 = copyOfDrawPile.pop();
 
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 2 card with color ' + drawnCardColor + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck,drawCard1forD2,drawCard2forD2];
@@ -1154,7 +1181,8 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1171,7 +1199,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1183,7 +1211,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1200,7 +1230,7 @@ const game_logic = (function() {
                 });
             }
             else if(drawnCard === 'D4W'){
-                alert('The card you drew is played for you.');
+                alert('You drew a Draw 4 Wildcard. The card you drew is played for you.');
 
                 const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
 
@@ -1217,7 +1247,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1234,8 +1266,8 @@ const game_logic = (function() {
                 });
 
             }   
-            else if((drawnCardColor === currentColor) && (drawnCardNumber === currentNumber)){
-                alert('The card you drew is played for you.');
+            else if((drawnCardColor === currentColor) || (drawnCardNumber === currentNumber)){
+                alert('You drew ' + drawnCard + '. The card you drew is played for you.');
 
                 // update deck
                 const updatedPlayer1Deck = [...player1Deck];
@@ -1245,7 +1277,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1270,7 +1304,9 @@ const game_logic = (function() {
                 if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-                if (!isMuted) playShuffleSound;
+                if (isMuted == false) playShuffleSound();
+
+                console.log("on card drawn game.js socket emit.")
                 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1287,12 +1323,15 @@ const game_logic = (function() {
                 });
             }
         }
+        else {}
         
     }
 
     const cheatFunction = (user) =>{
 
         if(user === 'player1' && whoseTurn === 'player1'){
+
+            const copyOfDrawPile = [...drawPile];
 
             const copyOfPlayer1Deck = [...player1Deck];
 
@@ -1306,7 +1345,7 @@ const game_logic = (function() {
             if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-            if (!isMuted) playShuffleSound;
+            if (isMuted == false) playShuffleSound();
             
             socket.emit("updateGameState",{
                 isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1324,6 +1363,8 @@ const game_logic = (function() {
 
         }
         else if(user === 'player2' && whoseTurn === 'player2'){
+            const copyOfDrawPile = [...drawPile];
+
             const copyOfPlayer2Deck = [...player2Deck];
 
             const discardCard1 = copyOfPlayer2Deck.pop();
@@ -1336,7 +1377,7 @@ const game_logic = (function() {
             if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
-            if (!isMuted) playShuffleSound;
+            if (isMuted == false) playShuffleSound();
             
             socket.emit("updateGameState",{
                 isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1357,5 +1398,23 @@ const game_logic = (function() {
         
     }
 
-    return {getIsGameOver, getWinner, getWhoseturn, getPlayer1Deck, getPlayer2Deck, getDrawPile, getPlayedPile, getCurrentNumber,getCurrentColor,getPlayer1MaxNumCards,getPlayer2MaxNumCards, initGame, onCardPlayed, onCardDrawn,playShuffleSound,setUnoPressed, cheatFunction}
+    return{ getIsGameOver, 
+            getWinner, 
+            getWhoseturn, 
+            getPlayer1Deck, 
+            getPlayer2Deck, 
+            getDrawPile, 
+            getPlayedPile, 
+            getCurrentNumber, 
+            getCurrentColor, 
+            getPlayer1MaxNumCards, 
+            getPlayer2MaxNumCards, 
+            initGame, 
+            onCardPlayed, 
+            onCardDrawn, 
+            playShuffleSound, 
+            setUnoPressed, 
+            cheatFunction,
+            getIsMuted,
+            setIsMuted }
 })();

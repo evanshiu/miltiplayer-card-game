@@ -223,6 +223,27 @@ io.on("connection", (socket) => {
 
     })
 
+    socket.on('leaveRoom', () => {
+        const user = getUser(socket.id);
+        if(user != null){
+            socket.broadcast.to(user.room).emit("user left room");
+        }
+        //exit room too
+        socket.leave(user.room); //remove user from socket room
+        removeUser(socket.id); //remove user from users
+    })
+
+    socket.on('checkInRoom', () => {
+        const user = getUser(socket.id);
+        if(user != null){
+            socket.emit("checkInRoom", "yes");
+            // console.log("yes")
+        }else{
+            socket.emit("checkInRoom", "no");
+            // console.log("no")
+        }
+    })
+
     socket.on("disconnect", () => {
         // Remove the user from the online user list
         if (socket.request.session.user){
@@ -233,8 +254,9 @@ io.on("connection", (socket) => {
             const user = getUser(socket.id);
             //notify room user left
             //fix if not in room
-            io.to(user.room).emit("user left room");
-
+            if(user != null){
+                io.to(user.room).emit("user left room");
+            }
             
             //exit room too
             removeUser(socket.id);
