@@ -361,7 +361,7 @@ const GameRunning = (function() {
             console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
 
             $("#topInfoText").text(whoseTurn + " Turn");
-            $("#room-role").text("You are " + GamePanel.getPlayer()+ currentNumber + currentColor);
+            $("#room-role").text("You are " + GamePanel.getPlayer() + " | Current number and color is " + currentNumber + currentColor);
     
             $("#upperDeck").empty();
             $("#downerDeck").empty();
