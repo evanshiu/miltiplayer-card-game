@@ -233,6 +233,14 @@ const GamePanel = (function() {
 
         });
 
+        $("#sound").on("click", function() {
+            if(game_logic.getIsMuted() === true){
+                game_logic.setIsMuted(false);
+            }
+            else{
+                game_logic.setIsMuted(true);
+            }
+        });
     }
 
     const FirstUser = function() {
@@ -340,7 +348,7 @@ const GameRunning = (function() {
                 // 問題 2 ：不管哪個player click，上半部分的卡牌都會增加特別多，增加數量沒有規定，暫時不知道是什麼問題。
                 game_logic.onCardDrawn();
                 console.log("drawPile clicked end in ui.js");
-                window.setTimeout(function() { has_alert=false; }, 1000);
+                window.setTimeout(function() { has_alert=false; }, 10000000);
             }
             else{}
         });
