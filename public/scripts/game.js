@@ -694,8 +694,8 @@ const game_logic = (function() {
                             isGameOver: checkGameOver(updatedPlayer1Deck),
                             winner: checkWinner(updatedPlayer1Deck, 'player1'),
                             whoseTurn: 'player2',
-                            player1Deck: [updatedPlayer1Deck],
-                            player2Deck: [updatedPlayer2Deck],
+                            player1Deck: [...updatedPlayer1Deck],
+                            player2Deck: [...updatedPlayer2Deck],
                             drawPile: [...copyOfDrawPile],
                             playedPile: [...playedPile,playedCard],
                             currentNumber: playedCardNumber,
@@ -957,6 +957,7 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+                console.log("on card drawn game.js socket emit.")
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
                     winner: checkWinner(updatedPlayer1Deck, 'player1'),
@@ -987,6 +988,7 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1016,6 +1018,7 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1051,6 +1054,8 @@ const game_logic = (function() {
 
                 if (!isMuted) playShuffleSound;
 
+                console.log("on card drawn game.js socket emit.")
+
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
                     winner: checkWinner(updatedPlayer1Deck, 'player1'),
@@ -1079,6 +1084,8 @@ const game_logic = (function() {
 
                 if (!isMuted) playShuffleSound;
 
+                console.log("on card drawn game.js socket emit.")
+
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
                     winner: checkWinner(updatedPlayer1Deck, 'player1'),
@@ -1103,6 +1110,8 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer1Deck),
@@ -1141,6 +1150,8 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+
+                console.log("on card drawn game.js socket emit.")
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
                     winner: checkWinner(updatedPlayer2Deck, 'player2'),
@@ -1171,6 +1182,7 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1200,6 +1212,8 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1235,6 +1249,8 @@ const game_logic = (function() {
 
                 if (!isMuted) playShuffleSound;
 
+                console.log("on card drawn game.js socket emit.")
+
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
                     winner: checkWinner(updatedPlayer2Deck, 'player2'),
@@ -1250,7 +1266,7 @@ const game_logic = (function() {
                 });
 
             }   
-            else if((drawnCardColor === currentColor) && (drawnCardNumber === currentNumber)){
+            else if((drawnCardColor === currentColor) || (drawnCardNumber === currentNumber)){
                 alert('You drew ' + drawnCard + '. The card you drew is played for you.');
 
                 // update deck
@@ -1262,6 +1278,8 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+
+                console.log("on card drawn game.js socket emit.")
 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),
@@ -1287,6 +1305,8 @@ const game_logic = (function() {
                 if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length); 
 
                 if (!isMuted) playShuffleSound;
+
+                console.log("on card drawn game.js socket emit.")
                 
                 socket.emit("updateGameState",{
                     isGameOver: checkGameOver(updatedPlayer2Deck),

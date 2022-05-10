@@ -272,6 +272,9 @@ const GameInit = (function() {
 const GameRunning = (function() {
 
     const checkClick = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
+
+        console.log("IT CLICKED.");
+        
         $("#downerDeck img").on("click", function() {
             var src = $(this).attr("src");
             src = src.replace("./asssets/cards-front/", "");
@@ -294,12 +297,14 @@ const GameRunning = (function() {
         $("#drawPile").on("click", function() {
             if(whoseTurn === GamePanel.getPlayer()) {
                 console.log("drawPile clicked in ui.js");
-                console.log("whoseTurn: " + whoseTurn + " | brower player: " + GamePanel.getPlayer());
+                console.log("whoseTurn: " + whoseTurn + " | browser player: " + GamePanel.getPlayer());
                 // Need Help: 可以成功socket emit和 socket on
                 // 問題 1 ：不管是player 1還是player 2 click 了, 都是兩邊同時增加2張牌，上面那句console.log 的結果，感覺是whoseTurn沒有更新的問題
                 // 問題 2 ：不管哪個player click，上半部分的卡牌都會增加特別多，增加數量沒有規定，暫時不知道是什麼問題。
                 game_logic.onCardDrawn();
+                console.log("drawPile clicked end in ui.js");
             }
+            else{}
         });
 
         $("#unoButton").on("click", function() {
@@ -318,7 +323,7 @@ const GameRunning = (function() {
             console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
 
             $("#topInfoText").text(whoseTurn + " Turn");
-            $("#room-role").text("You are " + GamePanel.getPlayer());
+            $("#room-role").text("You are " + GamePanel.getPlayer()+ currentNumber + currentColor);
     
             $("#upperDeck").empty();
             $("#downerDeck").empty();
@@ -351,7 +356,7 @@ const GameRunning = (function() {
         }
     }
 
-    return { checkClick, updateGame };
+    return { checkClick, updateGame};
 
 })();
 
