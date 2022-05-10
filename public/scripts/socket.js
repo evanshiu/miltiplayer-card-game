@@ -85,6 +85,11 @@ const Socket = (function() {
 
         });
 
+        socket.on("checkInRoom", (response) => {
+            console.log("response" + response);
+            OnlineUsersPanel.setInRoom(response);
+        });
+
     };
 
     // This function disconnects the socket from the server
@@ -97,5 +102,13 @@ const Socket = (function() {
         socket.emit('joinRoom', room );
     }
 
-    return { getSocket, connect, disconnect, joinRoom};
+    const leaveRoom = function(){
+        socket.emit('leaveRoom');
+    }
+
+    const checkInRoom = function(){
+        socket.emit('checkInRoom');
+    }
+
+    return { getSocket, connect, disconnect, joinRoom, leaveRoom, checkInRoom};
 })();
