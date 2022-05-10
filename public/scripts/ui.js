@@ -3,6 +3,7 @@ const SignInForm = (function() {
     const initialize = function() {
         // Hide it
         $("#signin-overlay").hide();
+        $("#gamePage").hide();
 
         // Submit event for the signin form
         $("#signin-form").on("submit", (e) => {
@@ -162,9 +163,11 @@ const OnlineUsersPanel = (function() {
         });
     };
 
+
     // // This function updates the online users panel
     // const update = function(onlineUsers) {
     //     const onlineUsersArea = $("#online-users-area");
+
 
 
     //     // Clear the online users area
@@ -193,6 +196,9 @@ const GamePanel = (function() {
 
     let player = ""
 
+    // Need to Do : Music BGM play
+    // let musicBGM = new Audio('../asssets/sound-effects/JayChou.mp3');
+
     const setPlayer = function(x){
         player = x;
     }
@@ -200,17 +206,39 @@ const GamePanel = (function() {
     const getPlayer = function(){return player;}
 
     const initialize = function() {
+
         $("#start-game").hide();
+        $("#middleInfo").hide();
+
+        // Need to Do : Music BGM play
+        // $("music").on("click", function() {
+        //     if($("#music").val() === "ON") {
+        //         $("#music").attr('value', "OFF");
+        //         console.log("Music OFF");
+        //     }
+        //     if($("#music").val() === "OFF") {
+        //         $("#music").attr('value', "ON");
+        //         console.log("Music ON");
+        //     }
+        // })
+
+        $("#leave").on("click", function() {
+            // Need Help : @Evan
+            console.log("Leave Button onClick");    // <- Success 
+            $("#home-container-overlay").show();    // 要把homepage show回來
+
+        });
+
     }
 
     const FirstUser = function() {
-        $("#topInfoText").text("Waiting for other player to join the game.");
+        $("#topInfoText").text("Waiting other player...");
     }
 
     const startGame = function() {
 
         if (player === "player1") {
-            $("#topInfoText").text("Player 1 please click start to start the game");
+            $("#topInfoText").text("Please click the start button.");
 
             $("#start-game").show();
 
@@ -220,7 +248,7 @@ const GamePanel = (function() {
             });
         }
         if (player === "player2") {
-            $("#topInfoText").text("Wait player 1 to start the game");
+            $("#topInfoText").text("Wait for start the game.");
 
         }
     }
@@ -233,8 +261,10 @@ const GameInit = (function() {
 
     const initialize = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
 
+        $("#middleInfo").show();
         $("#topInfoText").text(whoseTurn + " Turn");
-        $("#middleInfo").append("<p>You are " + GamePanel.getPlayer() + "</p>");
+        $("#room-role").text("You are " + GamePanel.getPlayer());
+        // $("#playerView img").style.width = "calc(780px /" +  + ")";
 
         if(GamePanel.getPlayer() == "player1"){      
             for( var i = 0; i < player2Deck.length; i++){
@@ -255,9 +285,14 @@ const GameInit = (function() {
             }
         }
 
-        $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile + ".png'>"));
+        // $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
+        $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
 
-        GameRunning.checkClick();
+        console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
+
+        console.log(GamePanel.getPlayer())
+
+        GameRunning.checkClick(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
     }
 
     return { initialize };
@@ -265,15 +300,102 @@ const GameInit = (function() {
 
 const GameRunning = (function() {
 
-    const checkClick = function() {
-        $("#downerDeck img").on("click", function(){
-            console.log("OMG can work");
+    const checkClick = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
+
+        console.log("IT CLICKED.");
+        
+        $("#downerDeck img").on("click", function() {
+            var src = $(this).attr("src");
+            src = src.replace("./asssets/cards-front/", "");
+            var cardPlayed = src.replace(".png", "");
+            console.log(cardPlayed);
+
+            if(whoseTurn === GamePanel.getPlayer()) {
+                game_logic.onCardPlayed(cardPlayed);
+            }
+
         });
 
-        // $(".gameBackground")
+        $(document).on("keydown", function(e) {
+            if (e.keyCode == 32) {
+                console.log("Cheat Mode On");
+                game_logic.cheatFunction(GamePanel.getPlayer());
+            }
+        });
+
+        $("#drawPile").on("click", function() {
+            if(whoseTurn === GamePanel.getPlayer()) {
+                console.log("drawPile clicked in ui.js");
+                console.log("whoseTurn: " + whoseTurn + " | browser player: " + GamePanel.getPlayer());
+                // Need Help: 可以成功socket emit和 socket on
+                // 問題 1 ：不管是player 1還是player 2 click 了, 都是兩邊同時增加2張牌，上面那句console.log 的結果，感覺是whoseTurn沒有更新的問題
+                // 問題 2 ：不管哪個player click，上半部分的卡牌都會增加特別多，增加數量沒有規定，暫時不知道是什麼問題。
+                game_logic.onCardDrawn();
+                console.log("drawPile clicked end in ui.js");
+            }
+            else{}
+        });
+
+        $("#unoButton").on("click", function() {
+            // Need Help : 不知道要不要加其他要求
+            if(whoseTurn === GamePanel.getPlayer()) {
+                console.log("Uno Button onClick");
+                game_logic.setUnoPressed(true);
+            }
+        });
     }
 
-    return { checkClick };
+    const updateGame = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
+        
+        if (!isGameOver) {
+            console.log("HI update Game now");
+            console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
+
+            $("#topInfoText").text(whoseTurn + " Turn");
+            $("#room-role").text("You are " + GamePanel.getPlayer()+ currentNumber + currentColor);
+    
+            $("#upperDeck").empty();
+            $("#downerDeck").empty();
+
+            if(GamePanel.getPlayer() == "player1"){      
+                for( var i = 0; i < player2Deck.length; i++){
+                    $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
+                }
+    
+                for( var i = 0; i < player1Deck.length; i++){
+                    $("#downerDeck").append($("<img src='./asssets/cards-front/" + player1Deck[i] + ".png'>"));
+                }
+            }
+            if(GamePanel.getPlayer() == "player2"){
+                for( var i = 0; i < player1Deck.length; i++){
+                    $("#upperDeck").append($("<img src='./asssets/card-back.png'>"));
+                }
+                
+                for( var i = 0; i < player2Deck.length; i++){
+                    $("#downerDeck").append($("<img src='./asssets/cards-front/" + player2Deck[i] + ".png'>"));
+                }
+            }
+    
+            $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
+    
+            GameRunning.checkClick(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
+        }
+        else {
+            GameEnd.GameEndWin(winner);
+        }
+    }
+
+    return { checkClick, updateGame};
+
+})();
+
+const GameEnd = (function() {
+
+    const GameEndWin = function(winner) {
+        console.log("Game Over" + winner);
+    }
+
+    return { GameEndWin };
 
 })();
 
@@ -292,4 +414,4 @@ const UI = (function() {
 
 })();
   
-//  //  TODO: Call game.js
+
