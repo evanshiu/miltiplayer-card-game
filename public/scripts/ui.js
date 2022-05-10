@@ -117,6 +117,13 @@ const HomePanel = (function() {
 
 const OnlineUsersPanel = (function() {
 
+    let inRoom = "no response"
+
+    const setInRoom = function(x){
+        inRoom = x;
+        console.log("setinroom"+inRoom)
+    }
+
     const initialize = function() {
         // Submit event for the input form
         $("#join-input-form").on("submit", (e) => {
@@ -131,6 +138,20 @@ const OnlineUsersPanel = (function() {
             // alert(content);
 
             Socket.joinRoom(content);
+            
+
+            $("#leave").on("click", function(){
+                console.log("checking if in room")
+                Socket.checkInRoom()
+                console.log(inRoom)
+                if (inRoom === "yes"){
+                    console.log("leaving room")
+                    Socket.leaveRoom();
+                }
+                if (inRoom === "no"){
+                    console.log("leaving room fail")
+                }
+            });
 
 
             // socket = Socket.getSocket();
@@ -141,30 +162,30 @@ const OnlineUsersPanel = (function() {
         });
     };
 
-    // This function updates the online users panel
-    const update = function(onlineUsers) {
-        const onlineUsersArea = $("#online-users-area");
+    // // This function updates the online users panel
+    // const update = function(onlineUsers) {
+    //     const onlineUsersArea = $("#online-users-area");
 
 
-        // Clear the online users area
-        onlineUsersArea.empty();
+    //     // Clear the online users area
+    //     onlineUsersArea.empty();
 
-		// Get the current user
-        const currentUser = Authentication.getUser();
+	// 	// Get the current user
+    //     const currentUser = Authentication.getUser();
 
-        // Add the user one-by-one
-        for (const username in onlineUsers) {
-            if (username != currentUser.username) {
-                onlineUsersArea.append(
-                    $("<div id='username-" + username + "'></div>")
-                        .append(UI.getUserDisplay(onlineUsers[username]))
-                );
-            }
-        }
-    };
+    //     // Add the user one-by-one
+    //     for (const username in onlineUsers) {
+    //         if (username != currentUser.username) {
+    //             onlineUsersArea.append(
+    //                 $("<div id='username-" + username + "'></div>")
+    //                     .append(UI.getUserDisplay(onlineUsers[username]))
+    //             );
+    //         }
+    //     }
+    // };
 
 
-    return { initialize, update};
+    return { initialize, setInRoom};
 
 })();
 
