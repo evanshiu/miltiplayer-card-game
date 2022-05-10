@@ -259,7 +259,11 @@ const GameInit = (function() {
         // $("#playedPile").append($("<img src='./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png'>"));
         $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
 
-        GameRunning.checkClick(whoseTurn);
+        console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
+
+        console.log(GamePanel.getPlayer())
+
+        GameRunning.checkClick(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
     }
 
     return { initialize };
@@ -267,7 +271,7 @@ const GameInit = (function() {
 
 const GameRunning = (function() {
 
-    const checkClick = function(whoseTurn) {
+    const checkClick = function(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards) {
         $("#downerDeck img").on("click", function() {
             var src = $(this).attr("src");
             src = src.replace("./asssets/cards-front/", "");
@@ -275,7 +279,6 @@ const GameRunning = (function() {
             console.log(cardPlayed);
 
             if(whoseTurn === GamePanel.getPlayer()) {
-                // Need Help: 有error說 "copyOfDrawPile is not defined"
                 game_logic.onCardPlayed(cardPlayed);
             }
 
@@ -285,7 +288,6 @@ const GameRunning = (function() {
             // Need Help: "p" keyCode 是 112, 但按“p”沒有任何反應. "空格" keyCode 是 32, 可以用.
             if (e.keyCode == 32) {
                 console.log("Cheat Mode On");
-                // Need Help: 有error說 "copyOfDrawPile is not defined"
                 game_logic.cheatFunction(GamePanel.getPlayer());
             }
         });
@@ -314,6 +316,7 @@ const GameRunning = (function() {
         
         if (!isGameOver) {
             console.log("HI update Game now");
+            console.log({isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards});
 
             $("#topInfoText").text(whoseTurn + " Turn");
             $("#room-role").text("You are " + GamePanel.getPlayer());
@@ -339,7 +342,7 @@ const GameRunning = (function() {
     
             $("#playedPile").attr('src', "./asssets/cards-front/" + playedPile[playedPile.length -1] + ".png");
     
-            GameRunning.checkClick(whoseTurn);
+            GameRunning.checkClick(isGameOver,winner,whoseTurn,player1Deck,player2Deck,drawPile,playedPile,currentNumber,currentColor,player1MaxNumCards,player2MaxNumCards);
         }
         else {
             GameEnd.GameEndWin(winner);
@@ -375,4 +378,4 @@ const UI = (function() {
 
 })();
   
-//  //  TODO: Call game.js
+

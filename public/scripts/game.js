@@ -191,7 +191,7 @@ const game_logic = (function() {
     }
 
     const onCardPlayed = (playedCard) =>{
-
+        console.log("1")
         switch(playedCard){
             // case where it's number card or reverse card
             case '0R': case '1R': case '2R': case '3R': case '4R': case '5R': case '6R': case '7R': case '8R': case '9R': case '_R': case '0G': case '1G': case '2G': case '3G': case '4G': case '5G': case '6G': case '7G': case '8G': case '9G': case '_G': case '0B': case '1B': case '2B': case '3B': case '4B': case '5B': case '6B': case '7B': case '8B': case '9B': case '_B': case '0Y': case '1Y': case '2Y': case '3Y': case '4Y': case '5Y': case '6Y': case '7Y': case '8Y': case '9Y': case '_Y': {
@@ -199,10 +199,14 @@ const game_logic = (function() {
                 const playedCardNumber = playedCard.charAt(0);
                 const playedCardColor = playedCard.charAt(1);
 
+                console.log("1a")
+
                 if(currentColor === playedCardColor || currentNumber === playedCardNumber){
                     if(whoseTurn === 'player1'){
                         // Save the index on player's deck for the playedCard 
                         const deckIndex = player1Deck.indexOf(playedCard);
+
+                        console.log("2")
                         // didn't press uno
                         if(player1Deck.length === 2 && !unoPressed){
                             alert('Did not press Uno.');
@@ -237,14 +241,17 @@ const game_logic = (function() {
                             });
                         }
                         else{   
+                            const copyOfDrawPile = [...drawPile];
+                            console.log("3")
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck];
+                            console.log("4")
 
                             // update maxNumCards
                             if (updatedPlayer1Deck.length > player1MaxNumCards) setPlayer1MaxNumCards(updatedPlayer1Deck.length);
                             if (updatedPlayer2Deck.length > player2MaxNumCards) setPlayer2MaxNumCards(updatedPlayer2Deck.length);
-
+                            console.log({updatedPlayer1Deck,updatedPlayer2Deck,drawPile,copyOfDrawPile,playedPile})
                             // play sound
                             if (!isMuted) playShuffleSound;
                             //send socket
@@ -299,7 +306,9 @@ const game_logic = (function() {
                                 player2MaxNumCards, player2MaxNumCards
                             });
                         }
-                        else{   
+                        else{
+                            
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck];
                             const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -376,7 +385,8 @@ const game_logic = (function() {
                             });
                         }
                         else{ 
-                
+                            const copyOfDrawPile = [...drawPile];
+
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck];
@@ -440,7 +450,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
-
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck];
                             const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -523,7 +533,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
-
+                            const copyOfDrawPile = [...drawPile];
                             // update deck
                             const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                             const updatedPlayer2Deck = [...player2Deck,drawCard1forD2,drawCard2forD2];
@@ -590,6 +600,7 @@ const game_logic = (function() {
                             });
                         }
                         else{   
+                            const copyOfDrawPile = [...drawPile];
                              // update deck
                              const updatedPlayer1Deck = [...player1Deck,drawCard1forD2,drawCard2forD2];
                              const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -667,6 +678,7 @@ const game_logic = (function() {
                         });
                     }
                     else{   
+                        const copyOfDrawPile = [...drawPile];
                         // update deck
                         const updatedPlayer1Deck = [...player1Deck.slice(0,deckIndex),...player1Deck.slice(deckIndex+1)];
                         const updatedPlayer2Deck = [...player2Deck];
@@ -734,6 +746,7 @@ const game_logic = (function() {
                         });
                     }
                     else{   
+                        const copyOfDrawPile = [...drawPile];
                          // update deck
                          const updatedPlayer1Deck = [...player1Deck];
                          const updatedPlayer2Deck = [...player2Deck.slice(0,deckIndex),...player2Deck.slice(deckIndex+1)];
@@ -841,8 +854,10 @@ const game_logic = (function() {
                     }
                 }
                 else{
+
+                    const playedCardNumber = NUM_FOR_D4_CARD;
                     // Let player choose color
-                    const newColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
+                    const playedCardColor = prompt('Choose a new color (R/G/B/Y)').toUpperCase()
                     // Save the index on player's deck for the playedCard 
                     const deckIndex = player2Deck.indexOf(playedCard);
                     const copyOfDrawPile = [...drawPile];
@@ -1297,6 +1312,8 @@ const game_logic = (function() {
 
         if(user === 'player1' && whoseTurn === 'player1'){
 
+            const copyOfDrawPile = [...drawPile];
+
             const copyOfPlayer1Deck = [...player1Deck];
 
             const discardCard1 = copyOfPlayer1Deck.pop();
@@ -1327,6 +1344,8 @@ const game_logic = (function() {
 
         }
         else if(user === 'player2' && whoseTurn === 'player2'){
+            const copyOfDrawPile = [...drawPile];
+
             const copyOfPlayer2Deck = [...player2Deck];
 
             const discardCard1 = copyOfPlayer2Deck.pop();
