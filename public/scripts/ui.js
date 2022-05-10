@@ -293,7 +293,6 @@ const GameRunning = (function() {
         });
 
         $(document).on("keydown", function(e) {
-            // Need Help: "p" keyCode 是 112, 但按“p”沒有任何反應. "空格" keyCode 是 32, 可以用.
             if (e.keyCode == 32) {
                 console.log("Cheat Mode On");
                 game_logic.cheatFunction(GamePanel.getPlayer());
